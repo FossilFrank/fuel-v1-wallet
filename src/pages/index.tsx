@@ -4,34 +4,28 @@ import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import fuel from '@fuel-js/wallet';
 import { useEffect, useRef, useState } from 'react';
+import { useWallet } from 'hooks/useWallet';
+import { useBalances } from 'hooks/useBalances';
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  const wallet = useRef<fuel.Wallet | null>(null);
+  const { wallet, connect } = useWallet();
   const [balance, setBalance] = useState(0);
+  const balances = useBalances();
 
-  const connect = async () => {
-    // @ts-ignore
-    await window.ethereum.enable();
-  }
+  // const deposit = async () => {
+  //   await wallet.deposit('0x0000000000000000000000000000000000000000', fuel.utils.parseEther('0.0001'));
+  // }
 
-  const deposit = async () => {
-    // @ts-ignore
-    const wallet = new fuel.Wallet(window.ethereum, {});
-    await wallet.deposit('0x0000000000000000000000000000000000000000', fuel.utils.parseEther('0.0001'));
-  }
+  // const updateBalance = async () => {
+  //   const bal = await wallet.balance('0x0000000000000000000000000000000000000000');
+  //   setBalance(bal);
+  // }
 
-  const updateBalance = async () => {
-    // @ts-ignore
-    const wallet = new fuel.Wallet(window.ethereum, {});
-    const bal = await wallet.balance('0x0000000000000000000000000000000000000000');
-    setBalance(bal);
-  }
-
-  useEffect(() => {
-    updateBalance();
-  }, [])
+  // useEffect(() => {
+  //   updateBalance();
+  // }, [])
 
   return (
     <>
@@ -51,10 +45,17 @@ export default function Home() {
 
         <div className={styles.center}>
           <div>
-            <button onClick={connect}>Connect</button>
-            <button onClick={deposit}>Deposit</button>
+            {!wallet && (
+              <button onClick={connect}>Connect</button>
+            )}
+            {/* <button onClick={deposit}>Deposit</button> */}
           </div>
           <div>{fuel.utils.formatEther(balance, 'ether')}</div>
+          {balances.map(balance => (
+            <div key={balance.symbol}>
+              {balance.symbol}: {balance.displayBalance}
+            </div>
+          ))}
         </div>
 
         <div className={styles.grid}>
