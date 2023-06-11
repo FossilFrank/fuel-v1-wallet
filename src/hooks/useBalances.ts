@@ -19,9 +19,10 @@ export const useBalances = () => {
       setBalances([]);
       return;
     }
-    
+
+    await wallet.sync();
     const _balances = await Promise.all(tokens.map(async (token: any): Promise<Balance & Token> => {
-      const balance = await wallet.balance(parseInt(token.id));
+      const balance = await wallet.balance(parseInt(token.id), { sync: false });
       return {
         ...token,
         balance,
