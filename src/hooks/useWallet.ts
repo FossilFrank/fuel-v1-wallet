@@ -17,5 +17,10 @@ export const useWallet = () => {
     refresh({});
   }
 
-  return { connect, wallet };
+  const disconnect = () => {
+    wallet = null;
+    refresh({});
+  }
+
+  return { connect, wallet, disconnect };
 };

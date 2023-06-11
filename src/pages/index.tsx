@@ -4,13 +4,13 @@ import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import fuel from '@fuel-js/wallet';
 import { useEffect, useRef, useState } from 'react';
-import { useWallet } from 'hooks/useWallet';
-import { useBalances } from 'hooks/useBalances';
+import { useWallet } from '@/hooks/useWallet';
+import { useBalances } from '@/hooks/useBalances';
+import AccountButton from '@/components/AccountButton';
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  const { wallet, connect } = useWallet();
   const [balance, setBalance] = useState(0);
   const balances = useBalances();
 
@@ -45,9 +45,7 @@ export default function Home() {
 
         <div className={styles.center}>
           <div>
-            {!wallet && (
-              <button onClick={connect}>Connect</button>
-            )}
+            <AccountButton />
             {/* <button onClick={deposit}>Deposit</button> */}
           </div>
           <div>{fuel.utils.formatEther(balance, 'ether')}</div>
